@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  connection: local
+  become: False
+  gather_facts: false
+  tasks: 
+  - name: create s3 bucket
+    s3_bucket: 
+      aws_access_key: your_AccessKey
+      aws_secret_key: your_SecretKey
+      name: maheshkhade123321
+
