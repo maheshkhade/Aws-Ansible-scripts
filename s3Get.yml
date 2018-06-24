@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: "S3 Get operation"
+      s3:
+        aws_access_key: yourAccess_key
+        aws_secret_key: yourSecret_key
+        bucket: maheshkhade123321 
+        object: /my/desired/key.txt
+        dest: /home/key1.txt
+        mode: get
