@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Put object
+      s3:
+        aws_access_key: yourAccessKey
+        aws_secret_key: yourSecretkey
+        bucket: maheshkhade123321 
+        object: /my/desired/key.txt
+        src: /home/mahesh/Desktop/mahesh/test1.txt 
+        mode: put
+
