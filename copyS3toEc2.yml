@@ -1,0 +1,24 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: List s3 Items
+    s3:
+      aws_access_key: your_access_key
+      aws_secret_key: your_secret_key
+      bucket: maheshkhade123321
+      mode: list
+    register: s3Objects
+  - name: List S3
+    debug:
+      msg: "{{ item }}"
+    with_items: "{{ s3Objects.s3_keys }}"
+  - name: copy S3 to Ec2
+    s3:
+      aws_access_key: your_access_key
+      aws_secret_key: your_secret_key
+      bucket: maheshkhade123321
+      object: "{{ item }}"
+      dest: "/etc/mk/{{ item|basename }}"
+      mode: get
+    with_items: "{{ s3Objects.s3_keys }}"

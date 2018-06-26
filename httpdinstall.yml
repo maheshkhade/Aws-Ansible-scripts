@@ -1,0 +1,8 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Install Httpd
+    yum: name=httpd state=latest
+  - name: Start httpd service
+    service: name=httpd state=restarted  
