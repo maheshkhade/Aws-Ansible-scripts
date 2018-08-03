@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Hello World printer
+    debug:
+      msg: "{{ item }}"
+    with_items:
+      - one 
+      - two

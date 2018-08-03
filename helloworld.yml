@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+  - name: Hello World printer
+    debug:
+      msg: "{{ansible_os_family}}" 
