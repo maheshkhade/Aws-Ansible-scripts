@@ -1,0 +1,83 @@
+{% macro load_policies(file) %}{% include file %}{% endmacro -%}
+
+apiVersion: kops/v1alpha2
+kind: Cluster
+metadata:
+  name: {{ cluster_fqdn }}
+spec:
+  additionalPolicies:
+    master: |
+      {{ load_policies('./masters_iam_policies.json.j2') | indent(6) }}
+    node: |
+{% if override_nodes_iam.stat.exists %}
+      {{ load_policies(override_nodes_iam.stat.path) | indent(6) }}
+{%else %}
+      {{ load_policies('./nodes_iam_policies.json.j2') | indent(6) }}
+{% endif %}
+  api:
+    loadBalancer:
+      type: Public
+  addons:
+  - manifest: s3://{{ kops_state_store_bucket }}/stable-addons/addons.yaml
+  authorization:
+    alwaysAllow: {}
+  channel: stable
+  cloudLabels:
+    authorisation: maheshkhade, alokpatra
+    environment: {{ env_tag }}
+    kubernetes.io/cluster/{{ cluster_fqdn }}: owned
+    owner: k8s
+    retention: forever
+  cloudProvider: aws
+  configBase: s3://{{ kops_state_store_bucket }}/{{ cluster_fqdn }}
+  etcdClusters:
+  {{ etcdClusters | to_nice_yaml(indent=2) | indent(2) }}
+  iam:
+    allowContainerRegistry: true
+    legacy: false
+{% if kubeAPIServer is defined %}
+  kubeAPIServer:
+    {{ kubeAPIServer | to_nice_yaml(indent=2) | indent(4) }}
+{% if featureGates is defined %}
+    featureGates:
+      {{ featureGates | to_nice_yaml(indent=2) | indent(6) }}
+{% endif %}
+{% endif %}
+{% if docker is defined %}
+  docker:
+    {{ docker | to_nice_yaml(indent=2) | indent(4) }}
+{% endif %}
+  kubeControllerManager:
+    horizontalPodAutoscalerSyncPeriod: 15s
+    horizontalPodAutoscalerUseRestClients: true
+{% if featureGates is defined %}
+    featureGates:
+      {{ featureGates | to_nice_yaml(indent=2) | indent(6) }}
+{% endif %}
+  kubelet:
+    authenticationTokenWebhook: false
+    anonymousAuth: false
+{% if featureGates is defined %}
+    featureGates:
+      {{ featureGates | to_nice_yaml(indent=2) | indent(6) }}
+{% endif %}
+  kubernetesApiAccess:
+  - 0.0.0.0/0
+  kubernetesVersion: {{ k8s_version }}
+  masterInternalName: api.internal.{{ cluster_fqdn }}
+  masterPublicName: api.{{ cluster_fqdn }}
+  networkCIDR: {{ network_cidr }}
+  networkID: {{ vpc_id }}
+  networking:
+    flannel:
+      backend: vxlan
+  nonMasqueradeCIDR: 100.64.0.0/10
+  sshAccess:
+  - 0.0.0.0/0
+  subnets:
+  {{ subnets | to_nice_yaml(indent=2) | indent(2) }}
+  topology:
+    dns:
+      type: Public
+    masters: private
+    nodes: private

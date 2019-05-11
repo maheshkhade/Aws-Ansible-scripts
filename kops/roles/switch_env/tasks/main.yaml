@@ -1,0 +1,9 @@
+- name: include shared_vars yaml vars files
+  include_vars:
+    dir: "{{ playbook_dir }}/shared_vars"
+    files_matching: '^\w+.yaml$'
+
+- name: include env_vars/{{ current_env }} yaml vars files
+  include_vars:
+    dir: "{{ playbook_dir }}/env_vars/{{ current_env }}"
+    files_matching: '^\w+.yaml$'

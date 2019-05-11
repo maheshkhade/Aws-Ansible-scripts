@@ -1,0 +1,13 @@
+kind: Addons
+metadata:
+  name: stable
+spec:
+  addons:
+  - manifest: namespaces/bootstrap-namespaces.yaml
+    name: namespaces
+    selector:
+      k8s-addon: namespaces
+  - manifest: helm/v2.12.3.yaml
+    name: helm
+    selector:
+      k8s-addon: helm

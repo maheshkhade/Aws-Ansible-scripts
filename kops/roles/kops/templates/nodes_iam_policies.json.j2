@@ -1,0 +1,189 @@
+[
+  {
+    "Effect": "Allow",
+    "Action": ["logs:PutLogEvents"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:CreateLogStream"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:CreateLogGroup"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:DescribeDestinations"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:DescribeExportTasks"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:GetLogEvents"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:DescribeLogStreams"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:DescribeMetricFilters"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:DescribeSubscriptionFilters"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:FilterLogEvents"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["logs:DescribeLogGroups"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["route53:ListHostedZones", "route53:ListResourceRecordSets"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["route53:ChangeResourceRecordSets"],
+    "Resource": ["arn:aws:route53:::hostedzone/*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": [
+      "autoscaling:DescribeAutoScalingGroups",
+      "autoscaling:DescribeAutoScalingInstances",
+      "autoscaling:DescribeTags",
+      "autoscaling:DescribeLaunchConfigurations",
+      "autoscaling:SetDesiredCapacity",
+      "autoscaling:TerminateInstanceInAutoScalingGroup"
+    ],
+    "Resource": "*"
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["cloudwatch:*"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["sts:AssumeRole"],
+    "Resource": ["arn:aws:iam::785295575848:role/nodes.{{ cluster_fqdn }}"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["s3:PutObject", "s3:PutObjectAcl"],
+    "Resource": ["arn:aws:s3:::grafana.screenshots/*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["sqs:ReceiveMessage", "sqs:DeleteMessage"],
+    "Resource": ["arn:aws:sqs:us-east-1:785295575848:mailer-{{ cluster_prefix }}"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["sns:*"],
+    "Resource": ["arn:aws:sns:us-east-1:785295575848:*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["sqs:*"],
+    "Resource": ["arn:aws:sqs:us-east-1:785295575848:*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": ["ses:SendRawEmail", "ses:SendEmail"],
+    "Resource": ["*"]
+  },
+  {
+    "Effect": "Allow",
+    "Action": [
+      "dynamodb:BatchGetItem",
+      "dynamodb:BatchWriteItem",
+      "dynamodb:UpdateTimeToLive",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem",
+      "dynamodb:Scan",
+      "dynamodb:Query",
+      "dynamodb:UpdateGlobalTable",
+      "dynamodb:UpdateItem",
+      "dynamodb:CreateTable",
+      "dynamodb:UpdateGlobalTableSettings",
+      "dynamodb:DescribeTable",
+      "dynamodb:GetItem",
+      "dynamodb:DescribeContinuousBackups",
+      "dynamodb:CreateGlobalTable",
+      "dynamodb:UpdateTable"
+    ],
+    "Resource": "arn:aws:dynamodb:us-east-1:*:table/{{ cluster_prefix }}*"
+  },
+  {
+    "Effect": "Allow",
+    "Action": [
+      "dynamodb:UpdateGlobalTableSettings",
+      "dynamodb:DescribeGlobalTableSettings",
+      "dynamodb:DescribeGlobalTable",
+      "dynamodb:GetShardIterator",
+      "dynamodb:Scan",
+      "dynamodb:Query",
+      "dynamodb:CreateGlobalTable",
+      "dynamodb:DescribeStream",
+      "dynamodb:UpdateGlobalTable",
+      "dynamodb:DescribeBackup",
+      "dynamodb:GetRecords"
+    ],
+    "Resource": [
+      "arn:aws:dynamodb:us-east-1:*:table/{{ cluster_prefix }}*/backup/*",
+      "arn:aws:dynamodb::*:global-table/{{ cluster_prefix }}*",
+      "arn:aws:dynamodb:us-east-1:*:table/{{ cluster_prefix }}*/stream/*",
+      "arn:aws:dynamodb:us-east-1:*:table/{{ cluster_prefix }}*/index/*"
+    ]
+  },
+  {
+    "Effect": "Allow",
+    "Action": [
+      "dynamodb:DescribeReservedCapacityOfferings",
+      "dynamodb:ListGlobalTables",
+      "dynamodb:TagResource",
+      "dynamodb:UntagResource",
+      "dynamodb:ListTables",
+      "dynamodb:DescribeReservedCapacity",
+      "dynamodb:ListBackups",
+      "dynamodb:ListTagsOfResource",
+      "dynamodb:DescribeTimeToLive",
+      "dynamodb:DescribeLimits",
+      "dynamodb:ListStreams"
+    ],
+    "Resource": "*"
+  },
+  {
+    "Effect": "Allow",
+    "Action": [
+      "ssm:Describe*"
+    ],
+    "Resource": "*"
+  },
+  {
+    "Effect": "Allow",
+    "Action": [
+      "ssm:Get*"
+    ],
+    "Resource": "*"
+  }
+]

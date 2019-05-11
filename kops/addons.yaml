@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  connection: local
+  vars_files:
+  - shared_vars/kops.yaml
+  environment:
+    KOPS_STATE_STORE: "s3://{{ kops_state_store_bucket }}"
+
+  tasks:
+    - name: "Sync addons to s3:{{ kops_state_store_bucket }}"
+      s3_sync:
+        bucket: "{{ kops_state_store_bucket }}"
+        file_root: "stable-addons"
+        key_prefix: "stable-addons"
+        file_change_strategy: checksum
+        delete: true

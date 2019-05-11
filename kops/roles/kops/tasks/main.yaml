@@ -1,0 +1,40 @@
+---
+- name: "ensure {{ playbook_dir }}/bin exist"
+  file:
+    path: "{{ playbook_dir }}/bin"
+    state: directory
+
+- name: "ensure kops binary {{ kops_version }} exist in {{ playbook_dir }}/bin"
+  get_url:
+    url: "{{ kops_darwin_download_path if ansible_os_family == 'Darwin' else kops_download_path }}"
+    dest: "{{ playbook_dir }}/bin/kops-{{ kops_version }}"
+    mode: 0755
+    checksum: "{{ kops_darwin_checksum if ansible_os_family == 'Darwin' else kops_checksum }}"
+
+- name: "symlink kops-{{ kops_version }} to kops in {{ playbook_dir }}/bin/"
+  file:
+    src: "kops-{{ kops_version }}"
+    dest: "{{ playbook_dir }}/bin/kops"
+    state: link
+    follow: false
+
+- name: "Ensure rendered_templates/{{ current_env }}/kops exist"
+  file:
+    path: rendered_templates/{{ current_env }}/kops
+    state: directory
+    recurse: true
+
+- name: "Check if nodes_iam_policies.json.j2 exist in env_vars/{{ current_env }}/kops/templates/"
+  stat:
+    path: "env_vars/{{ current_env }}/kops/templates/nodes_iam_policies.json.j2"
+  register: override_nodes_iam
+
+- name: render cluster spec for {{ current_env }}
+  template:
+    src: templates/cluster_spec.yaml.j2
+    dest: rendered_templates/{{ current_env }}/kops/cluster_spec.yaml
+
+- name: render instances groups spec for {{ current_env }}
+  template:
+    src: templates/instance_groups.yaml.j2
+    dest: rendered_templates/{{ current_env }}/kops/instance_groups.yaml

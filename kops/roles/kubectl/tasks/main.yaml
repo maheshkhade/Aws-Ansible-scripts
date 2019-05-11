@@ -1,0 +1,5 @@
+---
+- name: apply common resources
+  command: kubectl apply --validate -R -f roles/kubectl/files/
+
+- include_tasks: "secrets.yaml"

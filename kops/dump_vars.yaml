@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+  - switch_env
+  tasks:
+  - debug: var=vars.hostvars.localhost

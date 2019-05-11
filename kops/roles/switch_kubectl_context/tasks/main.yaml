@@ -1,0 +1,8 @@
+- name: check current kubectl context
+  command: kubectl config current-context
+  register: current_context
+  changed_when: false
+
+- name: switch kubectl context to {{ cluster_fqdn }}
+  command: kubectl config use-context {{ cluster_fqdn }}
+  when: 'current_context["stdout_lines"][0] != cluster_fqdn'

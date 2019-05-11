@@ -1,0 +1,43 @@
+# NOTE: the subnet name must match the name declared in cluster_spec.yaml
+---
+instance_groups:
+  master-us-east-1c:
+    min: 1
+    max: 1
+    instance_type: t2.medium
+    role: Master
+    subnets:
+    - kubernetes-us-east-1c
+  master-us-east-1d:
+    min: 1
+    max: 1
+    instance_type: t2.medium
+    role: Master
+    subnets:
+    - kubernetes-us-east-1d
+  master-us-east-1f:
+    min: 1
+    max: 1
+    instance_type: t2.medium
+    role: Master
+    subnets:
+    - kubernetes-us-east-1f
+  nodes:
+    min: 3
+    max: 3
+    instance_type: t2.medium
+    role: Node
+    subnets:
+    - kubernetes-us-east-1c
+    - kubernetes-us-east-1d
+    - kubernetes-us-east-1f
+  nodes2:
+    min: 0
+    max: 20
+    instance_type: t2.medium
+    cluster_autoscaler_enabled: true
+    role: Node
+    subnets:
+    - kubernetes-us-east-1c
+    - kubernetes-us-east-1d
+    - kubernetes-us-east-1f

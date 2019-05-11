@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+  - switch_env
+  - switch_kubectl_context
+  - kubectl

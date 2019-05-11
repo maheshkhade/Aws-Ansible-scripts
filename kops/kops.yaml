@@ -1,0 +1,41 @@
+---
+- hosts: localhost
+  connection: local
+  vars_files:
+  - shared_vars/kops.yaml
+  environment:
+    KOPS_STATE_STORE: "s3://{{ kops_state_store_bucket }}"
+
+  vars_prompt:
+  - name: "switch"
+    prompt: "Switch kubectl context after rendered spec files (y/n) ? Default yes. Enter 'n' when you creating new cluster."
+    default: "y"
+
+  roles:
+  - switch_env
+  - kops
+
+  tasks:
+  - name: Switch kubectl context
+    include_role:
+      name: switch_kubectl_context
+    when: switch == "y"
+
+  - name: "NOTE:"
+    debug:
+      msg:
+      - Make sure to use {{ playbook_dir }}/bin/kops binary
+      - You can export {{ playbook_dir }}/bin to $PATH in your bashrc
+      - If you are creating new cluster, specify the --name argument to kops and ignore below messages
+      - Update kops manifest for existing luster with:
+        - "{{ playbook_dir }}/bin/kops replace -f rendered_templates/{{ current_env }}/kops/cluster_spec.yaml"
+        - "{{ playbook_dir }}/bin/kops replace -f rendered_templates/{{ current_env }}/kops/instance_groups.yaml"
+      - Compute changes:
+        - "{{ playbook_dir }}/bin/kops update cluster"
+      - Apply the changes:
+        - "{{ playbook_dir }}/bin/kops update cluster --yes"
+      - Check if rolling update needed:
+        - "{{ playbook_dir }}/bin/kops rolling-update cluster"
+      - Rolling update the cluster with:
+        - "{{ playbook_dir }}/bin/kops rolling-update cluster --yes"
+      - Check terraform/README.md and follow instruction there if needed

@@ -1,0 +1,55 @@
+{% for ig, val in instance_groups.items() %}
+---
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: null
+  labels:
+    kops.k8s.io/cluster: {{ cluster_fqdn }}
+  name: {{ ig }}
+spec:
+{% if val["image"] is defined %}
+  image: "{{ val["image"] }}"
+{% else %}
+  image: {{ image }}
+{% endif %}
+  machineType: {{ val["instance_type"] }}
+  maxSize: {{ val["max"] }}
+  minSize: {{ val["min"] }}
+{% if val["maxPrice"] is defined %}
+  maxPrice: "{{ val["maxPrice"] }}"
+{% endif -%}
+{% if val["cluster_autoscaler_enabled"] is defined or val["cloudLabels"] is defined %}
+  cloudLabels:
+{% if val["cloudLabels"] is defined %}
+    {{ val["cloudLabels"] | to_nice_yaml(indent=2) | indent(4) -}}
+{% endif -%}
+{% if val["cluster_autoscaler_enabled"] is defined %}
+    k8s.io/cluster-autoscaler/enabled: "true"
+    k8s.io/cluster-autoscaler/{{ cluster_fqdn }}: "true"
+{% endif -%}
+{% if val["rootVolumeSize"] is defined %}
+  rootVolumeSize: {{ val["rootVolumeSize"]}}
+{% endif %}
+{% if val["rootVolumeType"] is defined %}
+  rootVolumeType: {{ val["rootVolumeType"]}}
+{% endif %}
+{% endif %}
+  nodeLabels:
+    kops.k8s.io/instancegroup: {{ ig }}
+  role: {{ val["role"] }}
+  subnets:
+    {{ val["subnets"] | to_nice_yaml(indent=2) | indent(4) }}
+{% if val["taints"] is defined %}
+  taints:
+    {{ val["taints"] | to_nice_yaml(indent=2) | indent(4) }}
+{% endif %}
+{% if val["hooks"] is defined %}
+  hooks:
+    {{ val["hooks"] | to_nice_yaml(indent=2) | indent(4) }}
+{% endif %}
+{% if val["kubelet"] is defined %}
+  kubelet:
+    {{ val["kubelet"] | to_nice_yaml(indent=2) | indent(4) }}
+{% endif %}
+{% endfor -%}

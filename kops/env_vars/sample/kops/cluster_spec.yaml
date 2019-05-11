@@ -1,0 +1,77 @@
+---
+k8s_version: 1.11.7
+vpc_id: vpc-03a12a895b0946bd6 #Mahesh Khade 27-Feb-2019
+image: ami-0f4768a55eaaac3d7  # debian-stretch-hvm-x86_64-gp2-2018-11-10-63975
+hosted_zone: Z2UJYPKK79ACU7
+cluster_fqdn: blue7.alpha-sense.org #Mahesh Khade 27-Feb-2019
+cluster_prefix: blue7 #Mahesh Khade 27-Feb-2019
+env_tag: blue7 #Mahesh Khade 27-Feb-2019
+
+kubeAPIServer:
+  admissionControl:
+  - NamespaceLifecycle
+  - LimitRanger
+  - ServiceAccount
+  - PersistentVolumeLabel
+  - DefaultStorageClass
+  - DefaultTolerationSeconds
+  - MutatingAdmissionWebhook
+  - ValidatingAdmissionWebhook
+  - ResourceQuota
+  - NodeRestriction
+  - Priority
+  - PersistentVolumeClaimResize
+  runtimeConfig:
+    autoscaling/v2beta1: "true"
+
+featureGates:
+  ExpandInUsePersistentVolumes: "true"
+  DynamicProvisioningScheduling: "true"
+  ExperimentalCriticalPodAnnotation: "true"
+  ExpandPersistentVolumes: "true"
+  VolumeScheduling: "true"
+
+network_cidr: 172.17.0.0/16
+subnets:
+- cidr: 172.17.8.0/21
+  name: kubernetes-us-east-1c
+  type: Private
+  zone: us-east-1c
+- cidr: 172.17.16.0/21
+  name: kubernetes-us-east-1d
+  type: Private
+  zone: us-east-1d
+- cidr: 172.17.24.0/21
+  name: kubernetes-us-east-1f
+  type: Private
+  zone: us-east-1f
+- cidr: 172.17.3.0/24
+  name: kubernetes-utility-us-east-1c
+  type: Utility
+  zone: us-east-1c
+- cidr: 172.17.4.0/24
+  name: kubernetes-utility-us-east-1d
+  type: Utility
+  zone: us-east-1d
+- cidr: 172.17.5.0/24
+  name: kubernetes-utility-us-east-1f
+  type: Utility
+  zone: us-east-1f
+
+etcdClusters:
+- etcdMembers:
+  - instanceGroup: master-us-east-1c
+    name: c
+  - instanceGroup: master-us-east-1d
+    name: d
+  - instanceGroup: master-us-east-1f
+    name: f
+  name: main
+- etcdMembers:
+  - instanceGroup: master-us-east-1c
+    name: c
+  - instanceGroup: master-us-east-1d
+    name: d
+  - instanceGroup: master-us-east-1f
+    name: f
+  name: events
